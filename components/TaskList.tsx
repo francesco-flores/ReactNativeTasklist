@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, Button, FlatList } from "react-native";
+import { View, Text, Button, FlatList, useColorScheme } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Task from "./Task";
 import { ITask } from "@/interfaces/ITask";
@@ -9,6 +9,7 @@ const TaskList = () => {
   const [tasks, setTasks] = useState<ITask[]>([]);
   const [input, setInput] = useState("");
   const [requiredDays, setRequiredDays] = useState(0);
+  const colorScheme = useColorScheme();
 
   useEffect(() => {
     loadTasks();
@@ -63,25 +64,34 @@ const TaskList = () => {
     saveTasks(updatedTasks);
   };
 
+  const textColor = colorScheme === "dark" ? "#FFFFFF" : "#000000";
+  const placeholderTextColor = colorScheme === "dark" ? "#888888" : "#CCCCCC";
+
   return (
-    <View style={{ padding: 20 }}>
-      <Text style={{ fontSize: 24, fontWeight: "bold", marginBottom: 10 }}>
+    <View style={{ flex: 1, padding: 20 }}>
+      <Text style={{ fontSize: 24, fontWeight: "bold", marginBottom: 10, color: textColor }}>
         Task List
       </Text>
       <ThemedTextInput
-        placeholder="Add a new Task..."
+        placeholder="Add a new Task description..."
         value={input}
         onChangeText={setInput}
+        placeholderTextColor={placeholderTextColor}
       />
-      <ThemedTextInput
-        placeholder="Required days..."
-        value={requiredDays.toString()}
-        onChangeText={(text: string) =>
-          setRequiredDays(parseInt(text.replace(/[^0-9]/g, "")) || 0)
-        }
-        keyboardType="numeric"
-      />
-      <Button title="Add" onPress={addTask} />
+      <View style={{ flexDirection: "row", alignItems: "center", marginBottom: 10 }}>
+        <Text style={{ marginRight: 10, color: textColor }}>Required days of work:</Text>
+        <ThemedTextInput
+          placeholder="0"
+          value={requiredDays === 0 ? "" : requiredDays.toString()}
+          onChangeText={(text: string) =>
+            setRequiredDays(parseInt(text.replace(/[^0-9]/g, "")) || 0)
+          }
+          keyboardType="numeric"
+          style={{ flex: 1 }}
+          placeholderTextColor={placeholderTextColor}
+        />
+      </View>
+      <Button title="Add task" onPress={addTask} />
       <FlatList
         data={tasks}
         keyExtractor={(item) => item.id}
@@ -92,6 +102,7 @@ const TaskList = () => {
             deleteTask={deleteTask}
           />
         )}
+        style={{ flex: 1 }}
       />
     </View>
   );
