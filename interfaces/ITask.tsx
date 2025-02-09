@@ -1,6 +1,6 @@
 export interface ITask {
     id: string;
     text: string;
-    completed: boolean;
+    isCompleted: boolean;
     date: string;
   }

@@ -24,7 +24,7 @@ const Task = ({ task, toggleCompletion, deleteTask }: TaskProps) => {
         <TouchableOpacity onPress={() => toggleCompletion(task.id)}>
           <Text
             style={{
-              textDecorationLine: task.completed ? "line-through" : "none",
+              textDecorationLine: task.isCompleted ? "line-through" : "none",
             }}
           >
             {task.text} - Deadline: {formattedDate}

@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, TextInput, Button, FlatList } from "react-native";
+import { View, Text, Button, FlatList } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Task from "./Task";
 import { ITask } from "@/interfaces/ITask";
+import { ThemedTextInput } from "./ThemeTextInput";
 
 const TaskList = () => {
   const [tasks, setTasks] = useState<ITask[]>([]);
@@ -39,8 +40,8 @@ const TaskList = () => {
     const newTask: ITask = {
       id: Date.now().toString(),
       text: input,
-      completed: false,
-      date: deadlineDate.toISOString().split('T')[0],
+      isCompleted: false,
+      date: deadlineDate.toISOString().split("T")[0],
     };
     const updatedTasks = [...tasks, newTask];
     setTasks(updatedTasks);
@@ -50,7 +51,7 @@ const TaskList = () => {
 
   const toggleTaskCompletion = (id: string) => {
     const updatedTasks = tasks.map((task) =>
-      task.id === id ? { ...task, completed: !task.completed } : task
+      task.id === id ? { ...task, completed: !task.isCompleted } : task
     );
     setTasks(updatedTasks);
     saveTasks(updatedTasks);
@@ -64,36 +65,32 @@ const TaskList = () => {
 
   return (
     <View style={{ padding: 20 }}>
-      <Text style={{ fontSize: 24, fontWeight: "bold", marginBottom: 10 }}>Task List</Text>
-      <TextInput
+      <Text style={{ fontSize: 24, fontWeight: "bold", marginBottom: 10 }}>
+        Task List
+      </Text>
+      <ThemedTextInput
         placeholder="Add a new Task..."
         value={input}
         onChangeText={setInput}
-        style={{
-          borderWidth: 1,
-          padding: 10,
-          marginBottom: 10,
-          borderRadius: 5,
-        }}
       />
-        <TextInput
+      <ThemedTextInput
         placeholder="Required days..."
         value={requiredDays.toString()}
-        onChangeText={(text) => setRequiredDays(parseInt(text.replace(/[^0-9]/g, "")) || 0)}
+        onChangeText={(text: string) =>
+          setRequiredDays(parseInt(text.replace(/[^0-9]/g, "")) || 0)
+        }
         keyboardType="numeric"
-        style={{
-          borderWidth: 1,
-          padding: 10,
-          marginBottom: 10,
-          borderRadius: 5,
-        }}
       />
       <Button title="Add" onPress={addTask} />
       <FlatList
         data={tasks}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
-          <Task task={item} toggleCompletion={toggleTaskCompletion} deleteTask={deleteTask} />
+          <Task
+            task={item}
+            toggleCompletion={toggleTaskCompletion}
+            deleteTask={deleteTask}
+          />
         )}
       />
     </View>
