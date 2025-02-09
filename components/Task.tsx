@@ -1,6 +1,7 @@
 import { ITask } from "@/interfaces/ITask";
 import React from "react";
 import { View, Text, Button, TouchableOpacity } from "react-native";
+import Card from "./Card";
 
 interface TaskProps {
   task: ITask;
@@ -12,21 +13,26 @@ const Task = ({ task, toggleCompletion, deleteTask }: TaskProps) => {
   const formattedDate = new Date(task.date).toLocaleDateString("it-IT");
 
   return (
-    <View
-      style={{
-        flexDirection: "row",
-        justifyContent: "space-between",
-        padding: 10,
-        borderBottomWidth: 1,
-      }}
-    >
-      <TouchableOpacity onPress={() => toggleCompletion(task.id)}>
-        <Text style={{ textDecorationLine: task.completed ? "line-through" : "none" }}>
-          {task.text} - Scadenza: {formattedDate}
-        </Text>
-      </TouchableOpacity>
-      <Button title="❌" onPress={() => deleteTask(task.id)} />
-    </View>
+    <Card>
+      <View
+        style={{
+          flexDirection: "row",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+      >
+        <TouchableOpacity onPress={() => toggleCompletion(task.id)}>
+          <Text
+            style={{
+              textDecorationLine: task.completed ? "line-through" : "none",
+            }}
+          >
+            {task.text} - Deadline: {formattedDate}
+          </Text>
+        </TouchableOpacity>
+        <Button title="❌" onPress={() => deleteTask(task.id)} />
+      </View>
+    </Card>
   );
 };
 
