@@ -102,7 +102,7 @@ const TaskList = () => {
             deleteTask={deleteTask}
           />
         )}
-        style={{ flex: 1 }}
+        style={{ flex: 1 , marginTop: 20}}
       />
     </View>
   );
